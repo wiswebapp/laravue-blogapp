@@ -6,7 +6,7 @@
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
                 <h4 class="alert-heading">Updated On {{blogData.updated_at}}</h4>
             </div>
-            <h3>{{blogData.title | to-uppercase}}</h3>
+            <h1>{{blogData.title | to-uppercase}}</h1>
             <hr>
             <div>
                 {{blogData.body}}

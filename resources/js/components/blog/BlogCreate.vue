@@ -2,9 +2,9 @@
     <div>
         <header-bar pageTitle="Create Blog"></header-bar>
         <div class="container">
-            <h3>Create Blog
+            <h1>Create Blog
                 <a class="pull-right btn btn-sm btn-info" @click="$router.go(-1)">Cancel</a>
-            </h3>
+            </h1>
             <hr>
             <div v-if="isError" class="alert alert-danger">
                 <strong>Please Solve Following Errors</strong>

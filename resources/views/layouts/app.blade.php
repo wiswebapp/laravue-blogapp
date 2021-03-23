@@ -17,7 +17,8 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
 
     <!-- Styles -->
-    <link href="https://bootswatch.com/3/paper/bootstrap.min.css" rel="stylesheet">
+    {{-- <link href="https://bootswatch.com/3/slate/bootstrap.min.css" rel="stylesheet"> --}}
+    <link href="https://bootswatch.com/3/cosmo/bootstrap.min.css" rel="stylesheet">
     <style>
         .disabled {
             pointer-events: none;

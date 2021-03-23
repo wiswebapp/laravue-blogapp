@@ -2,11 +2,11 @@
     <div>
         <header-bar pageTitle="Blog"></header-bar>
         <div class="container">
-            <h3>Blog List
+            <h1>Blog List
                 <router-link v-bind:to="'blog/create'">
                 <button class="pull-right btn btn-sm btn-default">Add Blog</button>
                 </router-link>
-            </h3>
+            </h1>
             <hr>
             <div class="alert alert-dismissible alert-success" v-if="showalert === 'true'">
                 <router-link v-bind:to="'/'">
@@ -18,7 +18,7 @@
                 <thead>
                     <tr>
                         <th align="left" colspan="4">
-                            <input v-model="searchQ" style="float:right" type="text" placeholder="Search here..">
+                            <input v-model="searchQ" style="float:right" type="text" placeholder="Search here.." v-on:input="filteredBlog" >
                         </th>
                     </tr>
                     <tr>
@@ -29,7 +29,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(blog, counter) in filteredBlog" v-bind:key="blog.id">
+                    <tr v-for="(blog, counter) in blogData" v-bind:key="blog.id">
                         <td>{{counter+1}}</td>
                         <td>{{blog.title | shrinkBody(120)}}</td>
                         <td>{{blog.body | shrinkBody(400)}}</td>
@@ -56,47 +56,36 @@
     </div>
 </template>
 <script>
+import commonFunc from '../../mixins/CommonFunc'
+
 export default {
     data: function(){
         return {
             blogData : [],
             searchQ: '',
-            showalert: this.$route.query.sucess,
             nextUrl: '',
             prevUrl: '',
             total : '',
             from : '',
             to : '',
+            page_url : '/api/blog/',
+            showalert: this.$route.query.sucess,
         }
     },
     created() {
-        this.fetchBlogs();
+        this.fetchBlogs(this.page_url);
     },
     methods: {
-        fetchBlogs(page_url) {
-            var app = this;
-            page_url = page_url || '/api/blog/';
-            axios.get(page_url)
-                .then(function (resp) {
-                    app.blogData = resp.data.data
-                    app.total = resp.data.total;
-                    app.from = resp.data.from;
-                    app.to = resp.data.to;
-                    app.nextUrl = (resp.data.next_page_url === null) ? '' : resp.data.next_page_url;
-                    app.prevUrl = (resp.data.prev_page_url === null) ? '' : resp.data.prev_page_url;
-                })
-                .catch(function (resp) {
-                    console.log(resp);
-                    alert("Whoops ! Some Error Has been encoutered");
-                });
+        filteredBlog: function(){
+            var dataSearch = "";
+            if(this.searchQ && this.searchQ.length >= 3){
+                var pageUrl = '/api/search?title=' + this.searchQ;
+                this.fetchBlogs(pageUrl);
+            }else{
+                return this.fetchBlogs(this.page_url);
+            }
         }
     },
-    computed:{
-        filteredBlog: function(){
-            return this.blogData.filter((blog) => {
-                return blog.title.toLowerCase().match(this.searchQ.toLowerCase());
-            })
-        }
-    }
+    mixins: [commonFunc],
 }
 </script>

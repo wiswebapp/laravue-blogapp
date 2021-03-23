@@ -12,6 +12,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $user = factory(App\Blog::class,100)->create();
+        for ($i=0; $i < 999; $i++) { 
+            factory(App\Blog::class,1)->create(['title' => $i."st Blog" ]);
+        }
     }
 }
