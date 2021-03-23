@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
 use App\Blog;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class BlogController extends Controller
 {
@@ -16,6 +17,16 @@ class BlogController extends Controller
     {
         $allBlog = Blog::orderBy('id','desc')->paginate(10);
         return $allBlog;
+    }
+
+    public function search(Request $request)
+    {
+        if( !empty($request->title) ){
+            $data = Blog::where('title', 'LIKE', '%'.$request->title.'%');            
+        }else{
+            $data = Blog::orderBy('id','desc');
+        }
+        return $data->paginate(10);
     }
 
     /**

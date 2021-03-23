@@ -1,7 +1,7 @@
-import blogList from './components/BlogList.vue';
-import blogView from './components/BlogView.vue';
-import blogCreate from './components/BlogCreate.vue';
-import blogEdit from './components/BlogEdit.vue';
+import blogList from './components/blog/BlogList.vue';
+import blogView from './components/blog/BlogView.vue';
+import blogCreate from './components/blog/BlogCreate.vue';
+import blogEdit from './components/blog/BlogEdit.vue';
 
 export default[
     { path: '/', component: blogList },
