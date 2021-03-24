@@ -8,6 +8,7 @@ require('./bootstrap');
 import VueAxios from 'vue-axios'
 import VueRouter from 'vue-router'
 import AppRoutes from './AppRoutes'
+import Vuelidate from 'vuelidate'
 
 window.Vue = require('vue');
 
@@ -17,6 +18,7 @@ const router = new VueRouter({
 })
 
 Vue.use(VueRouter)
+Vue.use(Vuelidate)
 Vue.use(VueAxios, axios)
 /**
  * The following block of code may be used to automatically register your

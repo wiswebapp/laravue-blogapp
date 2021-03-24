@@ -18,7 +18,7 @@
                 <thead>
                     <tr>
                         <th align="left" colspan="4">
-                            <input v-model="searchQ" style="float:right" type="text" placeholder="Search here.." v-on:input="filteredBlog" >
+                            <input v-model="searchQ" style="float:right" type="text" placeholder="Search here(min:3 keyword).." v-on:input="filteredBlog" >
                         </th>
                     </tr>
                     <tr>
@@ -72,10 +72,17 @@ export default {
             showalert: this.$route.query.sucess,
         }
     },
+    
     created() {
         this.fetchBlogs(this.page_url);
+        this.hidealert()
     },
     methods: {
+        hidealert(){
+            setTimeout(() => {
+                this.showalert = false
+            }, 3000);
+        },
         filteredBlog: function(){
             var dataSearch = "";
             if(this.searchQ && this.searchQ.length >= 3){
