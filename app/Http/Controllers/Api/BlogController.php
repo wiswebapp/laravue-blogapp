@@ -84,6 +84,10 @@ class BlogController extends Controller
      */
     public function destroy(Blog $blog)
     {
-        //
+        try {
+            return $blog->delete();
+        } catch (\Exception $ex) {
+            return ['error' => $ex->getMessage()];
+        }
     }
 }

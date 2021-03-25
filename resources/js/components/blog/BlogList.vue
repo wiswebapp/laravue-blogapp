@@ -8,7 +8,7 @@
                 </router-link>
             </h1>
             <hr>
-            <div class="alert alert-dismissible alert-success" v-if="showalert === 'true'">
+            <div class="alert alert-dismissible alert-success" v-if="showalert">
                 <router-link v-bind:to="'/'">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
                 </router-link>
@@ -33,13 +33,14 @@
                         <td>{{counter+1}}</td>
                         <td>{{blog.title | shrinkBody(120)}}</td>
                         <td>{{blog.body | shrinkBody(400)}}</td>
-                        <td style="width:10%">
+                        <td style="width:15%">
                             <router-link v-bind:to="'blog/view/' + blog.id">
                                 <button class="btn btn-sm btn-success">View</button>
                             </router-link>
                             <router-link v-bind:to="'blog/edit/' + blog.id">
                                 <button class="btn btn-sm btn-warning">Edit</button>
                             </router-link>
+                            <button @click="deleteBlog(blog.id)" class="btn btn-sm btn-danger">Delete</button>
                         </td>
                     </tr>
                 </tbody>
@@ -48,8 +49,16 @@
             <div>
                 <p class="text-danger" style="float:left">Showing Result From {{from}} - {{to}} out of {{total}}</p>
                 <div style="float:right">
-                    <button v-bind:class="{ disabled: !prevUrl }" class="btn btn-info" @click="fetchBlogs(prevUrl)">Prev</button>
-                <button v-bind:class="{ disabled: !nextUrl }" class="btn btn-info" @click="fetchBlogs(nextUrl)">Next</button>
+                    <div>
+                        <ul class="pagination">
+                            <li @click="fetchBlogs(prevUrl)" v-bind:class="{ disabled: !prevUrl }" class="page-item">
+                                <a class="page-link" href="#">&laquo;</a>
+                            </li>
+                            <li @click="fetchBlogs(nextUrl)" v-bind:class="{ disabled: !nextUrl }" class="page-item">
+                                <a class="page-link" href="#">&raquo;</a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
@@ -62,27 +71,11 @@ export default {
     data: function(){
         return {
             blogData : [],
-            searchQ: '',
-            nextUrl: '',
-            prevUrl: '',
-            total : '',
-            from : '',
-            to : '',
-            page_url : '/api/blog/',
+            searchQ: '',            
             showalert: this.$route.query.sucess,
         }
     },
-    
-    created() {
-        this.fetchBlogs(this.page_url);
-        this.hidealert()
-    },
     methods: {
-        hidealert(){
-            setTimeout(() => {
-                this.showalert = false
-            }, 3000);
-        },
         filteredBlog: function(){
             var dataSearch = "";
             if(this.searchQ && this.searchQ.length >= 3){
@@ -92,6 +85,10 @@ export default {
                 return this.fetchBlogs(this.page_url);
             }
         }
+    },
+    created() {
+        this.fetchBlogs(this.page_url);
+        this.hidealert()
     },
     mixins: [commonFunc],
 }

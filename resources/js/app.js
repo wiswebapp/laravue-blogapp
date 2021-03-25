@@ -7,8 +7,10 @@
 require('./bootstrap');
 import VueAxios from 'vue-axios'
 import VueRouter from 'vue-router'
-import AppRoutes from './AppRoutes'
+import AppRoutes from './appRoutes'
 import Vuelidate from 'vuelidate'
+import VueSweetalert2 from 'vue-sweetalert2'
+import 'sweetalert2/dist/sweetalert2.min.css'
 
 window.Vue = require('vue');
 
@@ -16,10 +18,15 @@ const router = new VueRouter({
     routes: AppRoutes,
     mode:'hash'
 })
+const swaloptions = {
+    confirmButtonColor: '#2f8912',
+    cancelButtonColor: '#ff0039',
+};
 
 Vue.use(VueRouter)
 Vue.use(Vuelidate)
 Vue.use(VueAxios, axios)
+Vue.use(VueSweetalert2,swaloptions)
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -48,11 +55,6 @@ Vue.filter('shrinkBody',function (value, length){
     return string;
 });
 
-/**
- * Next, we will create a fresh Vue application instance and attach it to
- * the page. Then, you may begin adding components to this application
- * or customize the JavaScript scaffolding to fit your unique needs.
- */
 const app = new Vue({
     el: '#app',
     router:router

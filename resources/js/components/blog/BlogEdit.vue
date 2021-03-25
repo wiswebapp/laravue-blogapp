@@ -32,6 +32,8 @@
     </div>
 </template>
 <script>
+import commonFunc from '../../mixins/CommonFunc'
+
 export default {
     data: function(){
         return {
@@ -46,17 +48,6 @@ export default {
                 body: '',
             }
         }
-    },
-    mounted(){
-        var app = this;
-        axios.get('/api/blog/' + app.blogId)
-        .then(function(resp){
-            app.blog.title = resp.data.title,
-            app.blog.body = resp.data.body
-        })
-        .catch(function (resp) {
-            alert("Whoops ! Some Error Encounter");
-        });
     },
     methods: {
         saveForm() {
@@ -74,6 +65,18 @@ export default {
                     app.errors.body = (errorData.body) ? errorData.body[0] : '';
                 });
         }
-    }
+    },
+    mounted(){
+        var app = this;
+        axios.get('/api/blog/' + app.blogId)
+        .then(function(resp){
+            app.blog.title = resp.data.title,
+            app.blog.body = resp.data.body
+        })
+        .catch(function (resp) {
+            alert("Whoops ! Some Error Encounter");
+        });
+    },
+    mixins: [commonFunc],
 }
 </script>
