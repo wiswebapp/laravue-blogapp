@@ -11,6 +11,7 @@ import AppRoutes from './appRoutes'
 import Vuelidate from 'vuelidate'
 import VueSweetalert2 from 'vue-sweetalert2'
 import 'sweetalert2/dist/sweetalert2.min.css'
+import moment from 'moment'
 
 window.Vue = require('vue');
 
@@ -23,6 +24,7 @@ const swaloptions = {
     cancelButtonColor: '#ff0039',
 };
 
+Vue.use(moment)
 Vue.use(VueRouter)
 Vue.use(Vuelidate)
 Vue.use(VueAxios, axios)
@@ -47,6 +49,11 @@ Vue.filter('to-uppercase',function (value){
 Vue.filter('to-lowercase',function (value){
     return value.toLowerCase(); 
 });
+Vue.filter('formatDate', function(value, customFormat) {
+    if (value) {
+      return moment(String(value)).format( (customFormat != '') ? customFormat : 'DD/MM/YYYY hh:mm' )
+    }
+})
 Vue.filter('shrinkBody',function (value, length){
     var string = value;
     if(value.length > length){

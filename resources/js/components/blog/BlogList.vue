@@ -17,22 +17,24 @@
             <table class="table table-striped table-hover ">
                 <thead>
                     <tr>
-                        <th align="left" colspan="4">
+                        <th align="left" colspan="5">
                             <input v-model="searchQ" style="float:right" type="text" placeholder="Search here(min:3 keyword).." v-on:input="filteredBlog" >
                         </th>
                     </tr>
                     <tr>
                         <th>#</th>
+                        <th>Crated At</th>
                         <th>Blog Title</th>
-                        <th>Blog Content</th>
+                        <th>Written By</th>
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="(blog, counter) in blogData" v-bind:key="blog.id">
                         <td>{{counter+1}}</td>
+                        <td>{{blog.created_at | formatDate('DD-MM-YYYY')}}</td>
                         <td>{{blog.title | shrinkBody(120)}}</td>
-                        <td>{{blog.body | shrinkBody(400)}}</td>
+                        <td>{{blog.user.name}}</td>
                         <td style="width:15%">
                             <router-link v-bind:to="'blog/view/' + blog.id">
                                 <button class="btn btn-sm btn-success">View</button>
@@ -47,7 +49,7 @@
             </table>
             <hr>
             <div>
-                <p class="text-danger" style="float:left">Showing Result From {{from}} - {{to}} out of {{total}}</p>
+                <p class="text-danger" style="float:left">Showing Result From {{from}} - {{to}} from {{total}} records</p>
                 <div style="float:right">
                     <div>
                         <ul class="pagination">
@@ -71,23 +73,23 @@ export default {
     data: function(){
         return {
             blogData : [],
-            searchQ: '',            
+            searchQ: '',
+            loadingBlog: false,
             showalert: this.$route.query.sucess,
         }
     },
     methods: {
         filteredBlog: function(){
-            var dataSearch = "";
             if(this.searchQ && this.searchQ.length >= 3){
-                var pageUrl = '/api/search?title=' + this.searchQ;
+                var pageUrl = '/api/blog?title=' + this.searchQ;
                 this.fetchBlogs(pageUrl);
             }else{
-                return this.fetchBlogs(this.page_url);
+                return this.fetchBlogs();
             }
         }
     },
     created() {
-        this.fetchBlogs(this.page_url);
+        this.fetchBlogs();
         this.hidealert()
     },
     mixins: [commonFunc],

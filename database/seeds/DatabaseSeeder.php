@@ -12,8 +12,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        for ($i=0; $i < 999; $i++) { 
-            factory(App\Blog::class,1)->create(['title' => $i."st Blog" ]);
+        factory(App\User::class,10)->create();
+
+        for ($i=0; $i < 100; $i++) { 
+            factory(App\Blog::class)->create([
+                'user_id'=>rand(1,10),
+            ]);
         }
     }
 }

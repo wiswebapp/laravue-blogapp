@@ -8,11 +8,17 @@
             <hr>
             <div v-if="isError" class="alert alert-danger">
                 <strong>Please Solve Following Errors</strong>
-                <li v-for="(value, name) in errors" v-if="value !== ''">
-                    {{value}}
-                </li>
+                <p v-for="value in errors" :key="value">
+                    <span v-if="value !== ''">- {{value}}</span>
+                </p>
             </div>
             <form v-on:submit.prevent="saveForm()">
+                <div class="form-group">
+                    <label>Select User</label>
+                    <select v-model="blog.user_id" class="form-control" required>
+                        <option v-for="(user,iteration) in usersArr" :key="iteration" :value="user.id">{{user.name}}</option>
+                    </select>
+                </div>
                 <div class="form-group">
                     <label>Blog Title</label>
                     <input type="text" v-model="blog.title" name="title" class="form-control" placeholder="Enter Blog Title.">
@@ -41,6 +47,7 @@ export default {
             blog: {
                 title: '',
                 body: '',
+                user_id : ''
             },
             isError :false,
             errors: {
@@ -64,14 +71,16 @@ export default {
                     app.errors.title = (errorData.title) ? errorData.title[0] : '';
                     app.errors.body = (errorData.body) ? errorData.body[0] : '';
                 });
-        }
+        },
     },
     mounted(){
+        this.fetchUsers();//Fetches User
         var app = this;
         axios.get('/api/blog/' + app.blogId)
         .then(function(resp){
-            app.blog.title = resp.data.title,
-            app.blog.body = resp.data.body
+            app.blog.title = resp.data.blog.title,
+            app.blog.body = resp.data.blog.body
+            app.blog.user_id = resp.data.blog.user_id
         })
         .catch(function (resp) {
             alert("Whoops ! Some Error Encounter");

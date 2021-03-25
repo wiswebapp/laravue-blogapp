@@ -15,8 +15,9 @@ export default {
                 this.showalert = false
             }, 3000);
         },
-        fetchBlogs: function(page_url) {
+        fetchBlogs(page_url = '',) {
             var app = this;
+            var page_url = (page_url == "") ? this.page_url : page_url;
             axios.get(page_url)
                 .then(function (resp) {
                     app.blogData = resp.data.data
@@ -27,7 +28,6 @@ export default {
                     app.prevUrl = (resp.data.prev_page_url === null) ? '' : resp.data.prev_page_url;
                 })
                 .catch(function (resp) {
-                    console.log(resp);
                     alert("Whoops ! Some Error Has been encoutered");
                 });
         },

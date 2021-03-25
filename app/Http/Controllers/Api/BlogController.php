@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Blog;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Arr;
 
 class BlogController extends Controller
 {
@@ -13,20 +14,19 @@ class BlogController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $allBlog = Blog::orderBy('id','desc')->paginate(10);
-        return $allBlog;
-    }
-
-    public function search(Request $request)
-    {
-        if( !empty($request->title) ){
-            $data = Blog::where('title', 'LIKE', '%'.$request->title.'%');            
-        }else{
-            $data = Blog::orderBy('id','desc');
+        $searchParams = $request->all();
+        $blogQuery = Blog::query();
+        $sort = Arr::get($searchParams, 'sort', 'id');
+        $order = Arr::get($searchParams, 'order', 'desc');
+        $title = Arr::get($searchParams, 'title', '');
+        
+        if(!empty($title)){
+          $blogQuery->where('title', 'LIKE', '%'.$request->title.'%');
         }
-        return $data->paginate(10);
+
+        return $blogQuery->with('user')->orderBy($sort,$order)->paginate(10);
     }
 
     /**
@@ -41,10 +41,7 @@ class BlogController extends Controller
             'title' => 'required|min:10',
             'body' => 'required|min:20',
         ]);
-        //For Hardcoding To add User
-        $data = $request->all();
-        $data['user_id'] = 1;
-        $blog = Blog::create($data);
+        $blog = Blog::create($request->all());
         return $blog;
     }
 
@@ -56,7 +53,9 @@ class BlogController extends Controller
      */
     public function show(Blog $blog)
     {
-        return $blog;
+        $data['blog'] = $blog;
+        $data['blog']['user'] = $blog->user;
+        return $data;
     }
 
     /**
