@@ -1,6 +1,7 @@
 export default {
     data: (() => {
         return {
+            usersArr: [],
             page_url : '/api/blog/',
             nextUrl: '',
             prevUrl: '',
@@ -14,6 +15,16 @@ export default {
             setTimeout(() => {
                 this.showalert = false
             }, 3000);
+        },
+        fetchUsers(){
+            var app = this;
+            axios.get('/api/user')
+            .then((resp) => {
+                app.usersArr = resp.data.data;
+            })
+            .catch(() => {
+                alert("Something went wrong");
+            });
         },
         fetchBlogs(page_url = '',) {
             var app = this;

@@ -2017,12 +2017,12 @@ __webpack_require__.r(__webpack_exports__);
         body: '',
         user_id: ''
       },
-      isError: false,
       errors: {
         title: '',
         body: '',
         user_id: ''
       },
+      isError: false,
       submitStatus: false
     };
   },
@@ -2067,7 +2067,7 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   created: function created() {
-    this.fetchUsers(); //Fetches User
+    this.fetchUsers();
   },
   mixins: [_mixins_CommonFunc__WEBPACK_IMPORTED_MODULE_1__["default"]]
 });
@@ -82669,6 +82669,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
+      usersArr: [],
       page_url: '/api/blog/',
       nextUrl: '',
       prevUrl: '',
@@ -82684,6 +82685,14 @@ __webpack_require__.r(__webpack_exports__);
       setTimeout(function () {
         _this.showalert = false;
       }, 3000);
+    },
+    fetchUsers: function fetchUsers() {
+      var app = this;
+      axios.get('/api/user').then(function (resp) {
+        app.usersArr = resp.data.data;
+      })["catch"](function () {
+        alert("Something went wrong");
+      });
     },
     fetchBlogs: function fetchBlogs() {
       var _this2 = this;

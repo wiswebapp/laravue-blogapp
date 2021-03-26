@@ -59,12 +59,12 @@ export default {
                 body: '',
                 user_id: ''
             },
-            isError : false,
             errors: {
                 title: '',
                 body: '',
                 user_id: '',
             },
+            isError : false,
             submitStatus : false
         }
     },
@@ -103,10 +103,10 @@ export default {
                     app.errors.body = (errorData.body) ? errorData.body[0] : '';
                 });
             }
-        }
+        },
     },
     created() {
-        this.fetchUsers();//Fetches User
+        this.fetchUsers();
     },
     mixins: [commonFunc],
 }
