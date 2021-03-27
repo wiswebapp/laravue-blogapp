@@ -8,7 +8,7 @@
                 </router-link>
             </h1>
             <hr>
-            <div class="alert alert-dismissible alert-success" v-if="showalert === 'true'">
+            <div class="alert alert-dismissible alert-success" v-if="showalert">
                 <router-link v-bind:to="'/'">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
                 </router-link>
@@ -17,39 +17,50 @@
             <table class="table table-striped table-hover ">
                 <thead>
                     <tr>
-                        <th align="left" colspan="4">
-                            <input v-model="searchQ" style="float:right" type="text" placeholder="Search here.." v-on:input="filteredBlog" >
+                        <th align="left" colspan="5">
+                            <input v-model="searchQ" style="float:right" type="text" placeholder="Search here(min:3 keyword).." v-on:input="filteredBlog" >
                         </th>
                     </tr>
                     <tr>
                         <th>#</th>
+                        <th>Crated At</th>
                         <th>Blog Title</th>
-                        <th>Blog Content</th>
+                        <th>Written By</th>
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="(blog, counter) in blogData" v-bind:key="blog.id">
                         <td>{{counter+1}}</td>
+                        <td>{{blog.created_at | formatDate('DD-MM-YYYY')}}</td>
                         <td>{{blog.title | shrinkBody(120)}}</td>
-                        <td>{{blog.body | shrinkBody(400)}}</td>
-                        <td style="width:10%">
+                        <td>{{blog.user.name}}</td>
+                        <td style="width:15%">
                             <router-link v-bind:to="'blog/view/' + blog.id">
                                 <button class="btn btn-sm btn-success">View</button>
                             </router-link>
                             <router-link v-bind:to="'blog/edit/' + blog.id">
                                 <button class="btn btn-sm btn-warning">Edit</button>
                             </router-link>
+                            <button @click="deleteBlog(blog.id)" class="btn btn-sm btn-danger">Delete</button>
                         </td>
                     </tr>
                 </tbody>
             </table>
             <hr>
             <div>
-                <p class="text-danger" style="float:left">Showing Result From {{from}} - {{to}} out of {{total}}</p>
+                <p class="text-danger" style="float:left">Showing Result From {{from}} - {{to}} from {{total}} records</p>
                 <div style="float:right">
-                    <button v-bind:class="{ disabled: !prevUrl }" class="btn btn-info" @click="fetchBlogs(prevUrl)">Prev</button>
-                <button v-bind:class="{ disabled: !nextUrl }" class="btn btn-info" @click="fetchBlogs(nextUrl)">Next</button>
+                    <div>
+                        <ul class="pagination">
+                            <li @click="fetchBlogs(prevUrl)" v-bind:class="{ disabled: !prevUrl }" class="page-item">
+                                <a class="page-link" href="#">&laquo;</a>
+                            </li>
+                            <li @click="fetchBlogs(nextUrl)" v-bind:class="{ disabled: !nextUrl }" class="page-item">
+                                <a class="page-link" href="#">&raquo;</a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
@@ -63,28 +74,23 @@ export default {
         return {
             blogData : [],
             searchQ: '',
-            nextUrl: '',
-            prevUrl: '',
-            total : '',
-            from : '',
-            to : '',
-            page_url : '/api/blog/',
+            loadingBlog: false,
             showalert: this.$route.query.sucess,
         }
     },
-    created() {
-        this.fetchBlogs(this.page_url);
-    },
     methods: {
         filteredBlog: function(){
-            var dataSearch = "";
             if(this.searchQ && this.searchQ.length >= 3){
-                var pageUrl = '/api/search?title=' + this.searchQ;
+                var pageUrl = '/api/blog?title=' + this.searchQ;
                 this.fetchBlogs(pageUrl);
             }else{
-                return this.fetchBlogs(this.page_url);
+                return this.fetchBlogs();
             }
         }
+    },
+    created() {
+        this.fetchBlogs();
+        this.hidealert()
     },
     mixins: [commonFunc],
 }
